@@ -30,6 +30,8 @@ services:
       DJANGO_SUPERUSER_USERNAME: admin
       DJANGO_SUPERUSER_EMAIL: admin@example.com
       DJANGO_SUPERUSER_PASSWORD: admin123
+      SECRET_KEY: "amarelo123"
+      SIMPLE_JWT_ACCESS_LIFETIME: "3600" 
 
 volumes:
   pgdata:
