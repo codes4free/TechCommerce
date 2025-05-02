@@ -1,10 +1,14 @@
 import os, django, random, decimal
 from faker import Faker
 
+# Add the project root to sys.path so that 'techcommerce' can be imported
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "techcommerce.settings")
 django.setup()
 
-from store.models import Produto  # ajuste path conforme app
+from store.models import Produto
 
 fake = Faker("pt_BR")
 Produto.objects.all().delete()

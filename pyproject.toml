@@ -2,7 +2,7 @@
 name = "techcommerce"
 version = "0.1.0"
 description = "MVP e-commerce platform built with Django"
-authors = ["Fernando Marques ffmtelecom@gmail.com"]
+authors = ["TechCommerce Author <author@techcommerce.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
