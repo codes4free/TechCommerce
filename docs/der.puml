@@ -1,0 +1,51 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity Usuario {
+  *id : UUID
+  *nome : varchar
+  *email : varchar
+  *senha_hash : varchar
+  *is_admin : boolean
+}
+
+entity Produto {
+  *id : UUID
+  *nome : varchar
+  *descricao : text
+  *preco : decimal(10,2)
+  *estoque : int
+  *criado_em : timestamp
+}
+
+entity Pedido {
+  *id : UUID
+  *usuario_id : UUID
+  *data_criacao : timestamp
+  *status : enum
+  *total : decimal(10,2)
+}
+
+entity ItemPedido {
+  *id : UUID
+  *pedido_id : UUID
+  *produto_id : UUID
+  *quantidade : int
+  *preco_unitario : decimal(10,2)
+}
+
+entity Pagamento {
+  *id : UUID
+  *pedido_id : UUID
+  *data : timestamp
+  *valor : decimal(10,2)
+  *metodo : enum
+  *status : enum
+}
+
+Usuario ||--o{ Pedido : "1:N"
+Pedido ||--o{ ItemPedido : "1:N"
+Produto ||--o{ ItemPedido : "1:N"
+Pedido ||--|| Pagamento : "1:1"
+@enduml
