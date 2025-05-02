@@ -6,6 +6,7 @@ from .serializers import ProdutoSerializer, PedidoSerializer
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Somente admin pode escrever; leitura liberada"""
+
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True

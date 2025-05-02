@@ -6,6 +6,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 
+
 class Produto(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     nome = models.CharField(max_length=120)
@@ -30,9 +31,13 @@ class Pedido(models.Model):
         CANCELADO = "CANCELADO", "Cancelado"
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pedidos")
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pedidos"
+    )
     data_criacao = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDENTE)
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.PENDENTE
+    )
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     class Meta:
@@ -79,11 +84,15 @@ class Pagamento(models.Model):
         FALHOU = "FALHOU", "Falhou"
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    pedido = models.OneToOneField(Pedido, on_delete=models.CASCADE, related_name="pagamento")
+    pedido = models.OneToOneField(
+        Pedido, on_delete=models.CASCADE, related_name="pagamento"
+    )
     data = models.DateTimeField(auto_now_add=True)
     valor = models.DecimalField(max_digits=12, decimal_places=2)
     metodo = models.CharField(max_length=10, choices=Metodo.choices)
-    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDENTE)
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.PENDENTE
+    )
 
     def __str__(self):
         return f"Pagamento {self.id} ({self.status})"

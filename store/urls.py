@@ -5,4 +5,4 @@ router = DefaultRouter()
 router.register("produtos", ProdutoViewSet)
 router.register("pedidos", PedidoViewSet)
 
-urlpatterns = router.urls 
+urlpatterns = router.urls

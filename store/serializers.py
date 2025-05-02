@@ -10,11 +10,20 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
 class ItemPedidoSerializer(serializers.ModelSerializer):
     produto = ProdutoSerializer(read_only=True)
-    produto_id = serializers.PrimaryKeyRelatedField(queryset=Produto.objects.all(), source="produto", write_only=True)
+    produto_id = serializers.PrimaryKeyRelatedField(
+        queryset=Produto.objects.all(), source="produto", write_only=True
+    )
 
     class Meta:
         model = ItemPedido
-        fields = ["id", "produto", "produto_id", "quantidade", "preco_unitario", "subtotal"]
+        fields = [
+            "id",
+            "produto",
+            "produto_id",
+            "quantidade",
+            "preco_unitario",
+            "subtotal",
+        ]
         read_only_fields = ["id", "subtotal", "preco_unitario"]
 
 
@@ -35,7 +44,9 @@ class PedidoSerializer(serializers.ModelSerializer):
             produto = item["produto"]
             quantidade = item["quantidade"]
             if quantidade > produto.estoque:
-                raise serializers.ValidationError("Estoque insuficiente para alguns itens.")
+                raise serializers.ValidationError(
+                    "Estoque insuficiente para alguns itens."
+                )
             ItemPedido.objects.create(
                 pedido=pedido,
                 produto=produto,
@@ -53,4 +64,4 @@ class PagamentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pagamento
         fields = "__all__"
-        read_only_fields = ["id", "data"] 
+        read_only_fields = ["id", "data"]
