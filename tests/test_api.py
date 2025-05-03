@@ -1,10 +1,22 @@
-# Placeholder tests for API endpoints. Replace with actual tests.
-
-def test_produtos_list():
-    # Simulate test for GET /api/produtos/
-    assert True
+from decimal import Decimal
 
 
-def test_pedidos_create():
-    # Simulate test for POST /api/pedidos/ using JWT authentication
-    assert True 
+def test_product_list(api_client, product_factory):
+    product_factory()
+    res = api_client.get("/api/produtos/?page_size=3")
+    assert res.status_code == 200
+    assert len(res.data) <= 3
+
+
+def test_create_and_get_order(api_client, product_factory):
+    prod = product_factory(preco=30)
+    payload = {"itens": [{"produto_id": str(prod.id), "quantidade": 2}]}
+    # create
+    res = api_client.post("/api/pedidos/", payload, format="json")
+    assert res.status_code == 201
+    order_id = res.data["id"]
+    assert Decimal(res.data["total"]) == Decimal("60")
+    # retrieve
+    res2 = api_client.get(f"/api/pedidos/{order_id}/")
+    assert res2.status_code == 200
+    assert res2.data["id"] == order_id 
