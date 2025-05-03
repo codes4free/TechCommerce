@@ -8,6 +8,12 @@ PASS=${PASSWORD:-admin123}
 TIMEOUT=${TIMEOUT:-10}
 # ---------------------------
 
+echo "⌛ Waiting for the server to be available at $HOST ..."
+until curl -s --max-time 2 "$HOST" >/dev/null; do
+  sleep 1
+done
+echo "Server is up!"
+
 command -v jq >/dev/null 2>&1 || { echo >&2 "❌ jq não encontrado. Instale jq e tente novamente."; exit 1; }
 
 echo "🔑  Obtendo token JWT para usuário '$USER'…"
@@ -22,9 +28,9 @@ TOKEN=$(echo "$body" | jq -r .access)
 [ -z "$TOKEN" ] && { echo "❌ Token vazio" >&2; exit 1; }
 
 echo "📦  Listando 5 primeiros produtos…"
-curl -sS --max-time $TIMEOUT -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/?page_size=5" | jq '.results[] | {id,nome,preco}'
+curl -sS --max-time $TIMEOUT -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/?page_size=5" | jq '.[] | {id, nome, preco}'
 
-FIRST_ID=$(curl -sS --max-time $TIMEOUT -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/?page_size=1" | jq -r .results[0].id)
+FIRST_ID=$(curl -sS --max-time $TIMEOUT -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/?page_size=1" | jq -r '.[0].id')
 [ -z "$FIRST_ID" ] && { echo "❌ Nenhum produto encontrado" >&2; exit 1; }
 
 echo "🛒  Criando pedido com produto $FIRST_ID (qty=2)…"

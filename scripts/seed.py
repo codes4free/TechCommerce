@@ -12,6 +12,10 @@ django.setup()
 from store.models import Produto
 
 fake = Faker("pt_BR")
+if os.getenv("ALLOW_SEED") != "1":
+    print("🚫  ALLOW_SEED not set — aborting seed")
+    sys.exit(0)
+
 Produto.objects.all().delete()
 
 for _ in range(20):

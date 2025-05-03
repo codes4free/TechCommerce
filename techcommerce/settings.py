@@ -3,7 +3,13 @@ import os
 import dj_database_url
 from pathlib import Path
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY env var must be set")
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -31,13 +37,16 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL", "postgresql://tech:secret@db:5432/techcommerce"),
+        default=os.getenv(
+            "DATABASE_URL",
+            "postgres://tech:secret@db:5432/techcommerce",
+        ),
         conn_max_age=600,
         conn_health_checks=True,
     )
 }
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_URLCONF = "techcommerce.urls"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

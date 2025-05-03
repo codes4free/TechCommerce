@@ -9,4 +9,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends build-essential
     && apt-get purge -y build-essential gcc && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 COPY . /app
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn techcommerce.wsgi:application -b 0.0.0.0:8000"]
+CMD ["gunicorn", "techcommerce.wsgi:application", "-b", "0.0.0.0:8000"]

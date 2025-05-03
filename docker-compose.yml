@@ -13,6 +13,7 @@ services:
     command: >
       sh -c "python manage.py makemigrations store && \
              python manage.py migrate && \
+             python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').delete(); User.objects.create_superuser('admin','admin@example.com','admin123')\" && \
              gunicorn techcommerce.wsgi:application -b 0.0.0.0:8000"
     volumes: [.:/app]
     ports: ["8000:8000"]
