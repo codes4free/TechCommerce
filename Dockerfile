@@ -11,6 +11,8 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
     pip install pytest pytest-cov
 
+COPY pyproject.toml /app/
+
 COPY . /app
 
 CMD ["gunicorn", "techcommerce.wsgi:application", "-b", "0.0.0.0:8000"] 
