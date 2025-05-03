@@ -1,18 +1,12 @@
-FROM python:3.9-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PATH="/usr/local/bin:$PATH"
-
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
-
-COPY ./requirements.txt /app/
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install pytest pytest-cov
-
-COPY pyproject.toml /app/
-
+COPY pyproject.toml poetry.lock* /app/
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev gcc \
+    && pip install --no-cache-dir "poetry==1.8.2" \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi \
+    && apt-get purge -y build-essential gcc && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 COPY . /app
-
-CMD ["gunicorn", "techcommerce.wsgi:application", "-b", "0.0.0.0:8000"] 
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn techcommerce.wsgi:application -b 0.0.0.0:8000"]

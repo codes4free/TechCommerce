@@ -1,5 +1,3 @@
-## 4. demo.sh (scripts/demo.sh)
-```bash
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -35,8 +33,3 @@ order=$(curl -sS --max-time $TIMEOUT -X POST -H "Authorization: Bearer $TOKEN" -
 
 echo "$order" | jq '{id,status,total}'
 echo "✅  Pedido criado com sucesso!"
-```
-
----
-
-
