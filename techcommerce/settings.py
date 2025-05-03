@@ -2,6 +2,7 @@
 import os
 import dj_database_url
 from pathlib import Path
+from datetime import timedelta
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
@@ -22,6 +23,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     # project apps
+    "django_filters",          #  ← novo
     "store",
 ]
 
@@ -33,6 +35,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.openapi.AutoSchema",
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 DATABASES = {
@@ -73,4 +76,10 @@ TEMPLATES = [
         },
     }
 ]
+
+# JWT token lifetime settings for djangorestframework-simplejwt
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 

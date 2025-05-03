@@ -1,3 +1,6 @@
+import pytest
+pytestmark = pytest.mark.django_db
+
 from decimal import Decimal
 
 
@@ -8,7 +11,9 @@ def test_product_list(api_client, product_factory):
     assert len(res.data) <= 3
 
 
-def test_create_and_get_order(api_client, product_factory):
+def test_create_and_get_order(api_client, product_factory, django_user_model):
+    user = django_user_model.objects.create_user(username="foo", password="pass")
+    api_client.force_authenticate(user=user)
     prod = product_factory(preco=30)
     payload = {"itens": [{"produto_id": str(prod.id), "quantidade": 2}]}
     # create

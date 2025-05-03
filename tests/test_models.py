@@ -1,5 +1,6 @@
 # Placeholder tests for models. Replace with actual tests for 'subtotal' and 'calcular_total'.
 import pytest
+from store.models import Pedido, ItemPedido
 
 def test_models_placeholder():
     assert True 
