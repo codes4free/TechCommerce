@@ -1,51 +1,33 @@
 # TechCommerce – PROGRESS
 
-## Sessão 2025‑05‑02 17:05 (UTC‑3)
+## Sessão 2025‑05‑02 20:10 (UTC‑3)
 
 ### Concluído ✅
+- **Runtime corrigido**: Gunicorn agora usa `techcommerce.wsgi:application` ➜ endpoint `/api/token/` funcionando (access + refresh retornados).
+- **Dockerfile** e **docker‑compose.yml** atualizados e commitados.
+- Contêiner reconstruído (`build --no-cache`) e stack estável.
+- Migrações aplicadas; usuário `admin` operacional.
 
-* **Requisitos.md** criado e versionado.
-* **DER** (`docs/der.puml`) pronto (gera `der.png`).
-* **pyproject.toml** incluído no repo com dependências, incluindo `djangorestframework-simplejwt`.
-* Decisão de autenticação: **JWT**, variáveis de ambiente mantidas no `docker-compose.yml`.
-* **Dockerfile**, **docker‑compose.yml** e `scripts/seed.py` commitados e "push feito".
-* `docker compose build` executado com sucesso.
-
-### Em andamento 🔄
-
-* Bootstrap inicial do projeto Django.
-
-### Próximos Passos ⏭️
-
-1. **Bootstrap Django**
-
-   ```bash
-   docker compose run --rm web django-admin startproject techcommerce .
-   docker compose run --rm web python manage.py migrate
-   ```
-2. **Criar app store**
-
-   ```bash
-   docker compose run --rm web python manage.py startapp store
-   ```
-3. **Implementar modelos** em `store/models.py`:
-
-   * `Produto`
-   * `Pedido`
-   * `ItemPedido`
-   * `Pagamento`
-4. Gerar migrações e aplicar: `python manage.py makemigrations && python manage.py migrate`.
-5. **Configurar DRF + SimpleJWT** no `settings.py` e rotas `/api/token/`, `/api/token/refresh/`.
-6. **Serializers & ViewSets** para `/api/produtos/` e `/api/pedidos/`.
-7. Executar `scripts/seed.py` para inserir 20 produtos.
-8. **Pytest** cobrindo modelos e APIs (≥ 80 % cobertura).
-9. Criar `demo.sh` que obtém token, lista produtos, cria pedido completo.
-10. Atualizar `README.md` e gerar relatório PDF.
+### Próximos Passos ⏭️ (Sprint final)
+1. **Seed de dados**
+   - Executar `scripts/seed.py` (20 produtos) e confirmar via `/api/produtos/`.
+2. **Endpoints restantes**
+   - `POST /api/pedidos/` e `GET /api/pedidos/` – testar com JWT.
+3. **Testes Pytest**
+   - Cobrir modelos (subtotal, calcular_total) e APIs (produtos list, pedidos create).
+   - Meta ≥ 80 % cobertura (`pytest --cov`).
+4. **Demo script**
+   - Finalizar `scripts/demo.sh` (token → lista produtos → cria pedido → exibe JSON).
+5. **Documentação**
+   - Atualizar `README.md` (setup, endpoints, exemplos `curl`).
+   - Gerar `docs/der.png` com PlantUML.
+   - Montar relatório PDF (template acadêmico) → subseções: Introdução, Arquitetura, DER, API, Testes, Conclusão.
+6. **CI Pipeline** (GitHub Actions)
+   - job: build → pytest → docker build → (opcional) push Docker Hub.
 
 ### Dúvidas / Bloqueios ❓
-
-Nenhum no momento.
+- Precisamos incluir lógica de pagamento (mock) antes da entrega? Ou fica para versão futura?  
+- Deseja coletar métricas (Prometheus) agora ou depois?
 
 ---
-
 *Atualize este arquivo ao final de cada sessão para manter rastreabilidade.*

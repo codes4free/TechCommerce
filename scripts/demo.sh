@@ -1,27 +1,25 @@
-# =========================
-# demo.sh (novo arquivo raiz)
-# =========================
+## 4. demo.sh (scripts/demo.sh)
+```bash
 #!/usr/bin/env bash
-set -e
-
+set -euo pipefail
 HOST="http://localhost:8000"
-USERNAME="admin"
-PASSWORD="admin123"
+USERNAME="${USERNAME:-admin}"
+PASSWORD="${PASSWORD:-admin123}"
+# get token
+response=$(curl -s -w "%{http_code}" -H "Content-Type: application/json" \
+            -d "{\"username\":\"${USERNAME}\",\"password\":\"${PASSWORD}\"}" \
+            "$HOST/api/token/")
+http_code="${response: -3}"
+body="${response::-3}"
+if [ "$http_code" != "200" ]; then
+  echo "Token request failed: HTTP $http_code – $body" >&2; exit 1;
+fi
+TOKEN=$(echo "$body" | jq -r '.access')
 
-# obter token
-TOKEN=$(curl -s -X POST "$HOST/api/token/" -H "Content-Type: application/json" -d "{\"username\":\"$USERNAME\",\"password\":\"$PASSWORD\"}" | jq -r .access)
+# list products
+curl -s -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/?page_size=5" | jq '.results[] | {id,nome,preco}'
+```
 
-echo "Token: $TOKEN"
+---
 
-# listar produtos
-curl -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/"
 
-# criar pedido simples (1º produto, quantidade 2)
-FIRST_ID=$(curl -s -H "Authorization: Bearer $TOKEN" "$HOST/api/produtos/?page_size=1" | jq -r .results[0].id)
-
-curl -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-     -d "{\"itens\":[{\"produto_id\":\"$FIRST_ID\",\"quantidade\":2}] }" \
-     "$HOST/api/pedidos/"
-
-echo -e "\nPedido criado!"
-echo "Raw token response:" $(curl -s -X POST "$HOST/api/token/" -H "Content-Type: application/json" -d "{\"username\":\"$USERNAME\",\"password\":\"$PASSWORD\"}")

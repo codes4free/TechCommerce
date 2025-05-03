@@ -26,5 +26,9 @@
     COPY . /app
     
     # ---- comando default -------------------------------------------------------
-    CMD ["gunicorn", "techcommerce.wsgi:application", "-b", "0.0.0.0:8000"]
+    #CMD ["gunicorn", "techcommerce.wsgi:application", "-b", "0.0.0.0:8000"]
     
+    # -------------------
+    # EXECUÇÃO FINAL
+    # -------------------
+    CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn techcommerce.wsgi:application -b 0.0.0.0:8000"]

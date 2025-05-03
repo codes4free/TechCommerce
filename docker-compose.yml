@@ -15,10 +15,10 @@ services:
   web:
     build: .
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py loaddata fixtures/initial.json ||
-             echo 'No fixture yet' &&
-             gunicorn techcommerce.asgi:application -b 0.0.0.0:8000"
+      sh -c "
+        python manage.py migrate &&
+        gunicorn techcommerce.wsgi:application -b 0.0.0.0:8000
+      "
     volumes:
       - .:/app
     ports:
