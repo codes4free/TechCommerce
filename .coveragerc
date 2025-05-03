@@ -4,3 +4,8 @@ omit =
     */migrations/*
     */wsgi.py
     */asgi.py
+    techcommerce/settings.py
+[report]
+exclude_lines =
+    pragma: no cover
+    def __str__
