@@ -1,4 +1,8 @@
 # ❶  Liste todos os apps **uma única vez** para evitar duplicatas.
+import os
+
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
